@@ -1,0 +1,32 @@
+{
+  "name": "icebreaker-agent-udp",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alligator-io/icebreaker-agent-udp.git"
+  },
+  "keywords": [
+    "agent"
+  ],
+  "author": "MarkusWunderlin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alligator-io/icebreaker-agent-udp/issues"
+  },
+  "homepage": "https://github.com/alligator-io/icebreaker-agent-udp",
+  "dependencies": {
+    "broadcast-stream": "0.0.0",
+    "icebreaker-agent":"git+https://github.com/alligator-io/icebreaker-agent.git",
+    "icebreaker": "^0.6.0"
+  },
+  "devDependencies": {
+    "icebreaker-peer-net": "^0.1.1",
+    "minimist": "^1.1.1",
+    "tape": "^4.0.0"
+  }
+}
