@@ -1,4 +1,6 @@
 # icebreaker-agent-udp
+UDP agent for icebreaker peers.
+
 ## Install
 ```bash
 npm install icebreaker-agent-udp
