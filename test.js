@@ -52,6 +52,9 @@ test('start agents', function (t) {
 
   localAgent = _.agents.udp({
     peers: localPeers,
+    address:'127.0.0.1',
+    multicast:false,
+    unicast:'127.0.0.2',
     port: 8886,
     loopback: true
   })
@@ -59,6 +62,9 @@ test('start agents', function (t) {
   remoteAgent = _.agents.udp({
     peers: remotePeers,
     port: 8886,
+    address:'127.0.0.2',
+    multicast:false,
+    unicast:'127.0.0.1',
     loopback: true
   })
 
@@ -69,7 +75,7 @@ test('start agents', function (t) {
   remoteAgent.start()
 })
 
-test('connections', function next(t) {
+test('connections', function (t) {
   t.plan(11)
 
   var timer = setInterval(function () {
@@ -93,7 +99,6 @@ test('connections', function next(t) {
       )
     }
   }, 500)
-
 
 })
 

@@ -19,6 +19,7 @@ _.mixin({
     loopback: false,
     peers: [],
     multicast: '239.5.5.5',
+    unicast:null,
 
     start: function () {
       var self = this
@@ -28,7 +29,11 @@ _.mixin({
         multicast: this.multicast,
         port: this.port,
         reuseAddr: true,
+        unicast: this.unicast,
         loopback: this.loopback
+      },
+      function(err){
+        if(err)throw err
       })
 
       function onData(msg) {
