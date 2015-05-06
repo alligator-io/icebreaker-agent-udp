@@ -1,6 +1,6 @@
 {
   "name": "icebreaker-agent-udp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "UDP agent for icebreaker peers.",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/alligator-io/icebreaker-agent-udp",
   "dependencies": {
     "datagram-stream": "^1.0.8",
-    "icebreaker-agent": "^0.1.0"
+    "icebreaker-agent": "^0.2.0"
   },
   "devDependencies": {
     "icebreaker": "^0.6.1",
