@@ -1,6 +1,6 @@
 {
   "name": "icebreaker-agent-udp",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "UDP agent for icebreaker peers.",
   "main": "index.js",
   "scripts": {
