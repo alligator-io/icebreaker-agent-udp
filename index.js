@@ -34,57 +34,56 @@ _.mixin({
       },
       function(err){
         if(err)throw err
-      })
 
-      function onData(msg) {
-        try {
-          var message = JSON.parse(msg)
-          message.port = message.port || msg.rinfo.port
-          _(
-            isFunction(self.peers) ? self.peers() :_.values(self.peers),
-            _.find(function(p){
-              return message.name === p.name && p.auto === true
-            },
-            function(err,found){
-              if(err)return _([err], _.log(null, 'error'))
-              if(found)_([message], self.connect())
-            })
-          )
+        function onData(msg) {
+          try {
+            var message = JSON.parse(msg)
+            message.port = message.port || msg.rinfo.port
+            _(
+              isFunction(self.peers) ? self.peers() :_.values(self.peers),
+              _.find(function(p){
+                return message.name === p.name && p.auto === true
+              },
+              function(err,found){
+                if(err)return _([err], _.log(null, 'error'))
+                if(found)_([message], self.connect())
+              })
+            )
 
+          }
+          catch (err) {
+            _([err], _.log(null, 'error'))
+          }
         }
-        catch (err) {
-          _([err], _.log(null, 'error'))
-        }
-      }
 
-      this.server.on('data', onData)
+        this.server.on('data', onData)
 
-      var onStop = function () {
-        this.removeListener('stopped', onStop)
-        this.server.removeListener('data', onData)
-        this.server.end()
-      }.bind(this)
+        var onStop = function () {
+          this.removeListener('stopped', onStop)
+          this.server.removeListener('data', onData)
+          this.server.end()
+        }.bind(this)
 
-      this.on('stop', onStop)
+        this.on('stop', onStop)
 
-      if (this.timer == null)
-        this.timer = setInterval(function () {
-          _(
-            _.values(isFunction(this.peers) ? this.peers() : this.peers),
-            _.drain(function (peer) {
-              if (peer && (peer.enabled == null || peer.enabled === true)) {
-                self.server.write(JSON.stringify({
-                  port: peer.port,
-                  name: peer.name,
-                  address: peer.address
-                }))
-              }
-            })
-          )
-        }.bind(this), this.interval)
+        if (this.timer == null)
+          this.timer = setInterval(function () {
+            _(
+              _.values(isFunction(this.peers) ? this.peers() : this.peers),
+              _.drain(function (peer) {
+                if (peer && (peer.enabled == null || peer.enabled === true)) {
+                  self.server.write(JSON.stringify({
+                    port: peer.port,
+                    name: peer.name,
+                    address: peer.address
+                  }))
+                }
+              })
+            )
+          }.bind(this), this.interval)
 
-      this.emit('started')
-
+        this.emit('started')
+      }.bind(this))
     },
 
     stop: function () {
