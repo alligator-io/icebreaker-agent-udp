@@ -1,47 +1,6 @@
 var test = require('tape')
 
-var _ = require('icebreaker')
-require('icebreaker-peer-net')
-require('./')
-
-var localPeers = {}
-var remotePeers = {}
-var connections = []
-
-test('start peers', function (t) {
-  t.plan(30)
-
-  for (var i = 0; i < 10; ++i) {
-    var peer = _.peers.net({
-      port: '568' + i,
-      name: 'net'
-    })
-
-    peer.once('started', function (port, i) {
-      return function () {
-        t.equals(this.name, 'net')
-        i % 2 ? localPeers[this.name + i] = this :
-          remotePeers[this.name + i] = this
-        t.equals(this.port, port)
-        t.ok(true, 'peer net' + i + ' started')
-      }
-    }('568' + i, i))
-
-    peer.on('connection', function (c) {
-      connections.push(c)
-
-    })
-
-    peer.once('stop', function () {
-      return function () {
-        delete localPeers[this.name + i]
-        delete remotePeers[this.name + i]
-      }
-    }(i))
-
-    peer.start()
-  }
-})
+var Agent =require('./')
 
 var agent
 var localAgent
@@ -50,8 +9,7 @@ var remoteAgent
 test('start agents', function (t) {
   t.plan(2)
 
-  localAgent = _.agents.udp({
-    peers: localPeers,
+  localAgent = Agent({
     address:'127.0.0.1',
     multicast:false,
     unicast:'127.0.0.2',
@@ -59,8 +17,7 @@ test('start agents', function (t) {
     loopback: true
   })
 
-  remoteAgent = _.agents.udp({
-    peers: remotePeers,
+  remoteAgent = Agent({
     port: 8886,
     address:'127.0.0.2',
     multicast:false,
@@ -75,46 +32,20 @@ test('start agents', function (t) {
   remoteAgent.start()
 })
 
-test('connections', function (t) {
-  t.plan(11)
+test('request/response',function(t){
+  t.plan(2)
+  remoteAgent.on('response',function(msg){
+    t.equal(msg.type,'ping');
 
-  var timer = setInterval(function () {
-    if (connections.length < 20) return
-    clearInterval(timer)
-    t.equal(connections.length, 20)
+    remoteAgent.emit('request',{type:'pong'});
 
-    for (var i in connections) {
-      var connection = connections[i]
-      if (connection.direction === 1) {
-        _('test1', connection, _.drain(function (item) {
-          t.equal(item.toString(), 'echotest1')
-        }))
-      }
-      else _(
-        connection,
-        _.map(function (m) {
-          return 'echo' + m.toString()
-        }),
-        connection
-      )
-    }
-  }, 500)
-
-})
-
-test('stop peers', function (t) {
-  t.plan(10)
-  for (var i in localPeers) {
-    var peer = localPeers[i]
-    peer.once('stopped', t.ok.bind(null, true, 'local peer ' + i + ' stopped'))
-    peer.stop()
-  }
-  for (var i in remotePeers) {
-    var peer = remotePeers[i]
-    peer.once('stopped', t.ok.bind(null, true, 'remote peer ' + i + ' stopped'))
-    peer.stop()
-  }
-})
+  });
+    localAgent.on('response',function(msg){
+    t.equal(msg.type,'pong');
+    t.end();
+  });
+  localAgent.emit('request',{type:'ping'});
+});
 
 test('stop agents', function (t) {
   t.plan(2)
