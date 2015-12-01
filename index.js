@@ -3,16 +3,10 @@ var Agent = require('icebreaker-agent')
 
 var createSocket = require('datagram-stream')
 
-function isFunction(obj) {
-  return typeof obj === 'function'
-}
-
 function AgentUdp(params) {
-  if (!(this instanceof AgentUdp))
-    return new AgentUdp(params);
+  if (!(this instanceof AgentUdp)) return new AgentUdp(params);
 
   var self = this
-
   var socket
 
   Agent.call(this, {
