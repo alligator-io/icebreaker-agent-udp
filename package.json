@@ -20,12 +20,11 @@
   },
   "homepage": "https://github.com/alligator-io/icebreaker-agent-udp",
   "dependencies": {
+    "icebreaker": "^1.0.1",
     "datagram-stream": "^1.0.8",
-    "icebreaker-agent": "^0.2.2"
+    "icebreaker-agent": "^1.0.0"
   },
   "devDependencies": {
-    "icebreaker": "^0.7.0",
-    "icebreaker-peer-net": "^0.3.1",
-    "tape": "^4.0.0"
+    "tape": "^4.2.2"
   }
 }
