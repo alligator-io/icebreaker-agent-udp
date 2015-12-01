@@ -14,7 +14,6 @@ function AgentUdp(params) {
     port: 8999,
     interval: 1000,
     loopback: false,
-    peers: [],
     multicast: '239.5.5.5',
     unicast: null,
 
