@@ -15,61 +15,61 @@ function AgentUdp(params) {
 
   var socket
 
-  Agent.call(this,{
+  Agent.call(this, {
     name: 'udp',
     port: 8999,
     interval: 1000,
     loopback: false,
     peers: [],
     multicast: '239.5.5.5',
-    unicast:null,
+    unicast: null,
 
     start: function () {
-      if(!socket)socket = createSocket({
-        address: this.address,
-        multicast: this.multicast,
-        port: this.port,
-        reuseAddr: true,
-        unicast: this.unicast,
-        loopback: this.loopback
-      },
-      function(err){
-        if(err)throw err
-				var self =this;
-				function onRequest(msg){
-					socket.write(JSON.stringify(msg))
-				}
+      if (!socket) socket = createSocket({
+          address: this.address,
+          multicast: this.multicast,
+          port: this.port,
+          reuseAddr: true,
+          unicast: this.unicast,
+          loopback: this.loopback
+        },
+        function (err) {
+          if (err) throw err
+          var self = this;
 
-				this.on('request',onRequest);
-
-        function onData(msg) {
-			    try {
-            var message = JSON.parse(msg)
-						message.address=msg.rinfo.address;
-            message.port = message.port || msg.rinfo.port
-						self.emit('response',message);
+          function onRequest(msg) {
+            socket.write(JSON.stringify(msg))
           }
-          catch (err) {
-            _([err], _.log(null, 'error'))
+
+          this.on('request', onRequest);
+
+          function onData(msg) {
+            try {
+              var message = JSON.parse(msg)
+              message.address = msg.rinfo.address;
+              message.port = message.port || msg.rinfo.port
+              self.emit('response', message);
+            } catch (err) {
+              _([err], _.log(null, 'error'))
+            }
           }
-        }
 
-        socket.on('data', onData)
-        var onStop = function () {
-					this.removeListener('request',onRequest)
-          this.removeListener('stopped', onStop)
-          socket.removeListener('data', onData)
-          socket.end()
-        }.bind(this)
+          socket.on('data', onData)
+          var onStop = function () {
+            this.removeListener('request', onRequest)
+            this.removeListener('stopped', onStop)
+            socket.removeListener('data', onData)
+            socket.end()
+          }.bind(this)
 
-        this.on('stop', onStop)
-        this.emit('started')
-      }.bind(this))
+          this.on('stop', onStop)
+          this.emit('started')
+        }.bind(this))
     },
     stop: function () {
       this.emit('stopped')
     }
-  },params)
+  }, params)
 }
 
 var proto = AgentUdp.prototype = Object.create(Agent.prototype)
