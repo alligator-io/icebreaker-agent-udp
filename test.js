@@ -10,11 +10,14 @@ test('start agents', function (t) {
   t.plan(2)
 
   localAgent = Agent({
-    port: 8886
+    port: 8886,
+    loopback:true
   })
 
   remoteAgent = Agent({
-    port: 8886
+    port: 8886,
+    loopback:true
+
   })
 
   localAgent.once('started', t.ok.bind(null, true, 'local agent started'))
@@ -27,14 +30,17 @@ test('start agents', function (t) {
 test('request/response',function(t){
   t.plan(2)
   remoteAgent.on('response',function(msg){
-    t.equal(msg.type,'ping');
+    if(msg.type=='ping'){
+      t.equal(msg.type,'ping');
 
-    remoteAgent.emit('request',{type:'pong'});
-
+      remoteAgent.emit('request',{type:'pong'});
+    }
   });
     localAgent.on('response',function(msg){
-    t.equal(msg.type,'pong');
-    t.end();
+    if(msg.type=='pong'){
+      t.equal(msg.type,'pong');
+      t.end();
+    }
   });
   localAgent.emit('request',{type:'ping'});
 });
