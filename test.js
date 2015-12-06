@@ -10,13 +10,11 @@ test('start agents', function (t) {
   t.plan(2)
 
   localAgent = Agent({
-    port: 8886,
-    loopback: true
+    port: 8886
   })
 
   remoteAgent = Agent({
-    port: 8886,
-    loopback: true
+    port: 8886
   })
 
   localAgent.once('started', t.ok.bind(null, true, 'local agent started'))
