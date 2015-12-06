@@ -10,18 +10,12 @@ test('start agents', function (t) {
   t.plan(2)
 
   localAgent = Agent({
-    address:'127.0.0.1',
-    multicast:false,
-    unicast:'127.0.0.2',
     port: 8886,
     loopback: true
   })
 
   remoteAgent = Agent({
     port: 8886,
-    address:'127.0.0.2',
-    multicast:false,
-    unicast:'127.0.0.1',
     loopback: true
   })
 
